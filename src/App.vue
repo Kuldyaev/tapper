@@ -3,14 +3,14 @@
     <LoaderMirror v-if="loader" />
     <div v-else class="activedesk">
       <StartGame v-if="user_id === null" @startGame="startGame" />
-      <HeaderPart v-else />
+      <GameBody v-else />
     </div>
   </main>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
-import HeaderPart from "./components/HeaderPart.vue";
+import GameBody from "./components/GameBody.vue";
 import StartGame from "./components/StartGame.vue";
 import LoaderMirror from "./components/LoaderMirror.vue";
 import api from "./shared/api";
@@ -40,8 +40,15 @@ async function startGame() {
   loader.value = true;
   try {
     api.post("/users", { telegram_id: 55555 }).then((res) => {
-      console.log(res);
-      loader.value = false;
+      if (res.data.tel_id === 55555) {
+        user_id.value = res.data.tel_id;
+        loader.value = false;
+        localStorage.setItem("user_id", res.data.tel_id);
+      } else {
+        console.log("something wrong");
+        console.log(res.data);
+        loader.value = false;
+      }
     });
   } catch (error) {
     console.log(error);
