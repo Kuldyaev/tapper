@@ -1,19 +1,11 @@
 <template>
   <div class="startgame">
-    <button class="startbtn">Start Game</button>
+    <button class="startbtn" @click="$emit(`startGame`)">Start Game</button>
   </div>
 </template>
 
-<script>
-export default {
-  name: "StartGame",
-  props: {
-    msg: String,
-  },
-};
-</script>
+<script setup></script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .startgame {
   width: 100%;
@@ -26,5 +18,12 @@ export default {
   width: min(75vw, 200px);
   height: min(25vw, 65px);
   border-radius: 16px;
+}
+.startbtn:hover {
+  background-color: bisque;
+}
+.startbtn:hover {
+  background-color: greenyellow;
+  scale: 0.99;
 }
 </style>

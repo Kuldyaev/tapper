@@ -1,11 +1,9 @@
 <template>
   <main>
     <LoaderMirror v-if="loader" />
-    <div v-else>
-      <StartGame v-if="user_id === null" />
+    <div v-else class="activedesk">
+      <StartGame v-if="user_id === null" @startGame="startGame" />
       <HeaderPart v-else />
-
-      <h1>ijffwpeok</h1>
     </div>
   </main>
 </template>
@@ -19,29 +17,51 @@ import api from "./shared/api";
 const user_id = ref(null);
 const loader = ref(true);
 
-async function askIsUser() {
+async function askIsUser(id) {
   try {
-    api.post("/users/check", { telegram_id: 4564654 }).then((res) => {
+    api.post("/users/check", { telegram_id: id }).then((res) => {
       if (res.data.status) {
         console.log(res.data);
         console.log("успех");
+        return true;
       } else {
         console.log(res.data);
         console.log("провал");
+        return false;
       }
     });
   } catch (error) {
     console.log(error);
+    return false;
+  }
+}
+
+async function startGame() {
+  loader.value = true;
+  try {
+    api.post("/users", { telegram_id: 55555 }).then((res) => {
+      console.log(res);
+      loader.value = false;
+    });
+  } catch (error) {
+    console.log(error);
+    loader.value = false;
+    return false;
   }
 }
 
 onMounted(() => {
-  askIsUser();
-
   if (localStorage.getItem("user_id")) {
     user_id.value = Number(localStorage.getItem("user_id"));
+    if (askIsUser(Number(user_id.value))) {
+      loader.value = false;
+    } else {
+      user_id.value = null;
+      loader.value = false;
+    }
   } else {
     user_id.value = null;
+    loader.value = false;
   }
 });
 
@@ -80,5 +100,13 @@ main {
   flex-grow: 1;
   margin-top: max((100vh - 750px)/2, 100vh - 100vh);
   padding: 0;
+}
+.activedesk {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
