@@ -1,8 +1,8 @@
 import axios from "axios";
+import baseURL from "./baseURI";
 
 const api = axios.create({
-  // baseURL: "https://svoyapi.ru/kuldiaeva/api",
-  baseURL: "http://localhost:8000/",
+  baseURL: baseURL,
   headers: {
     "Content-type": "application/json",
   },
